@@ -1,0 +1,12 @@
+{
+    "id": "mcdr_i18n_injector",
+    "version": "1.0.0",
+    "name": "MCDR I18n Injector",
+    "description": "Inject other languages into MCDR",
+    "author": [
+        "Huaji_MUR233"
+    ],
+    "resources": [
+        "LICENSE"
+    ]
+}
