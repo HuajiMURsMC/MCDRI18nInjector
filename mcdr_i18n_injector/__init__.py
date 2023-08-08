@@ -8,6 +8,7 @@ from .translation_manager import MyTranslationManager
 from .config import Config
 from .command import register_commands
 
+DEFAULT_FALLBACK = "en_us"
 
 real_translation_manager: Optional[TranslationManager] = None
 
@@ -26,7 +27,9 @@ def on_load(server: PluginServerInterface, old):
         return
     real_translation_manager = server._mcdr_server.translation_manager
     my_translation_manager = MyTranslationManager.from_translation_manager(real_translation_manager)
-    my_translation_manager.load_translation(i18n_file)
+    if config.fallback not in my_translation_manager.available_languages:
+        server.logger.error("Unknown fallback language %s, use default fallback language %s", config.fallback, DEFAULT_FALLBACK)
+    my_translation_manager.load_translation(i18n_file, DEFAULT_FALLBACK)
     server.logger.info("Patching TranslationManager")
     server._mcdr_server.translation_manager = my_translation_manager
     server.logger.info("Setting language to %s", config.language)

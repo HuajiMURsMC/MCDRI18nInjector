@@ -1,3 +1,4 @@
+from typing import Optional
 import os
 
 from mcdreforged.translation.translation_manager import TranslationManager
@@ -14,7 +15,7 @@ class MyTranslationManager(TranslationManager):
         instance.available_languages = translation_manager.available_languages
         return instance
 
-    def load_translation(self, file_path: str):
+    def load_translation(self, file_path: str, fallback: Optional[str] = None):
         self.logger.info("Loading translation file %s", file_path)
         language, _ = os.path.basename(file_path).rsplit('.', 1)
         try:
@@ -24,5 +25,9 @@ class MyTranslationManager(TranslationManager):
                 self.translations[key][language] = text
             self.available_languages.add(language)
             self.logger.debug('Loaded translation for %s with %d entries', language, len(translations))
+            if fallback is not None:
+                for key, translation in self.translations.items():
+                    if translation.get(language) is None:
+                        translation[language] = translation[fallback]
         except Exception:
             self.logger.exception('Failed to load language %s from "%s"', language, file_path)
